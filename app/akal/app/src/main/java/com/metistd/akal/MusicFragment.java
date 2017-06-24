@@ -74,6 +74,7 @@ public class MusicFragment extends Fragment {
         }
     }
 
+    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -89,7 +90,7 @@ public class MusicFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this
