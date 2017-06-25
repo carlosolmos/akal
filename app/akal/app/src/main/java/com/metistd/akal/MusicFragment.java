@@ -1,12 +1,16 @@
 package com.metistd.akal;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -28,6 +32,13 @@ public class MusicFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private boolean isPlaying = false;
+    private MainActivity mainActivity = null;
+    private ImageView musicIcon;
+    private ImageView rewindIcon;
+    private ImageView playPauseIcon;
+    private ImageView forwardIcon;
+    private TextView txtTrackName;
 
     public MusicFragment() {
         // Required empty public constructor
@@ -63,8 +74,108 @@ public class MusicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mainActivity = (MainActivity)getActivity();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_music, container, false);
+        final View musicView = inflater.inflate(R.layout.fragment_music, container, false);
+        TextView txtTrackName = (TextView)musicView.findViewById(R.id.txtTrackName);
+        musicIcon = (ImageView)musicView.findViewById(R.id.imgMusicIcon);
+        musicIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("MusicFragment", "Toggle Music");
+                if(!isPlaying){
+                    playMusic(musicView);
+                }else{
+                    stopMusic(musicView);
+                }
+            }
+        });
+
+        rewindIcon = (ImageView) musicView.findViewById(R.id.imgRewind);
+        rewindIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("MusicFragment", "Rewind Music");
+                rewindMusic(view);
+            }
+        });
+
+        playPauseIcon = (ImageView) musicView.findViewById(R.id.imgPause);
+        playPauseIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isPlaying){
+                    Log.d("MusicFragment", "Pause Music");
+                    pauseMusic(view);
+                }else{
+                    Log.d("MusicFragment", "Resume Music");
+                    resumeMusic(view);
+                }
+            }
+        });
+
+
+        forwardIcon = (ImageView) musicView.findViewById(R.id.imgForward);
+        forwardIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("MusicFragment", "Forward Music");
+                forwardMusic(view);
+            }
+        });
+
+
+        return musicView;
+    }
+
+    public void rewindMusic(View view){
+        if(mainActivity != null) {
+            mainActivity.rewind();
+            txtTrackName.setText(mainActivity.getTrackName());
+        }
+    }
+    public void pauseMusic(View view){
+        if(mainActivity != null) {
+            isPlaying = false;
+            mainActivity.pause();
+            playPauseIcon.setImageResource(R.drawable.play);
+            txtTrackName.setText(mainActivity.getTrackName());
+        }
+    }
+
+    public void resumeMusic(View view){
+        if(mainActivity != null) {
+            isPlaying = true;
+            mainActivity.resume();
+            playPauseIcon.setImageResource(R.drawable.pause);
+            txtTrackName.setText(mainActivity.getTrackName());
+        }
+    }
+
+    public void forwardMusic(View view){
+        if(mainActivity != null) {
+            mainActivity.forward();
+            txtTrackName.setText(mainActivity.getTrackName());
+        }
+    }
+
+    public void playMusic(View view){
+        if(mainActivity != null) {
+            isPlaying = true;
+            mainActivity.playAllTracks();
+            musicIcon.setImageResource(R.drawable.notew);
+            playPauseIcon.setImageResource(R.drawable.pause);
+            txtTrackName.setText(mainActivity.getTrackName());
+        }
+    }
+
+    public void stopMusic(View view){
+        if(mainActivity != null) {
+            isPlaying = false;
+            mainActivity.stop();
+            musicIcon.setImageResource(R.drawable.note);
+            txtTrackName.setText("");
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

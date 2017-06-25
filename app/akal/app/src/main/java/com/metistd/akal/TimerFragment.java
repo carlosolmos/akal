@@ -163,8 +163,8 @@ public class TimerFragment extends Fragment {
         validMinutesPicks.put(R.id.txtClockControlMinute1, 1);
         validMinutesPicks.put(R.id.txtClockControlMinute3, 3);
         validMinutesPicks.put(R.id.txtClockControlMinute5, 5);
-        validMinutesPicks.put(R.id.txtClockControlMinute10, 10);
-        validMinutesPicks.put(R.id.txtClockControlMinute15, 15);
+        validMinutesPicks.put(R.id.txtClockControlMinute7, 7);
+        validMinutesPicks.put(R.id.txtClockControlMinute9, 9);
         mapPickerMinutes = new HashMap<Integer, TextView>();
         for (int pick : validMinutesPicks.keySet()) {
             TextView txtPickerMinutes = (TextView) timerView.findViewById(pick);
@@ -233,11 +233,15 @@ public class TimerFragment extends Fragment {
 
     public void stopTimer(View view) {
         Log.d("TimerFragment", "Stopping timer");
+        if(countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         isTimerOn = false;
         isTimerRunning = false;
         currentMinutes = 0;
         currentSeconds = 0;
         resetTimerControls();
+        txtClockPlayPause.setText("Repeat");
         Log.d("TimerFragment", "Closing timer controls");
         closeTimerContols();
     }
@@ -246,12 +250,15 @@ public class TimerFragment extends Fragment {
         if(isTimerOn){
             if(isTimerRunning){
                 //pause
+                Log.d("TimerFragment", "Pausing timer: " + remainingMilliseconds );
                 countDownTimer.cancel();
                 txtClockPlayPause.setText("Start");
                 isTimerRunning = false;
             }else{
                 //resume.
+                Log.d("TimerFragment", "Resuming timer: " + remainingMilliseconds);
                 initCountDown(remainingMilliseconds);
+                countDownTimer.start();
                 txtClockPlayPause.setText("Pause");
                 isTimerRunning = true;
             }
@@ -290,7 +297,19 @@ public class TimerFragment extends Fragment {
         };
     }
     public void chime(){
+        final MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity.pause();
         soundPlayer.playSound(getContext(), SoundPlayer.CHIME1);
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        mainActivity.resume();
+                    }
+                },
+                7000
+        );
+
     }
     public void acceptPicker(View view) {
         if (currentSeconds > 0 || currentMinutes > 0) {
