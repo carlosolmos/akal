@@ -268,7 +268,7 @@ public class TimerFragment extends Fragment {
             isTimerOn = true;
             txtClockPlayPause.setText("Pause");
             txtClockPlayPause.setTextColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
-            long runForMillis = ((currentMinutes * 60)  + currentSeconds) * 1000;
+            long runForMillis = ((currentMinutes * 60)  + currentSeconds+1) * 1000;
             initCountDown(runForMillis);
             countDownTimer.start();
             isTimerRunning = true;
@@ -317,6 +317,7 @@ public class TimerFragment extends Fragment {
             String timerString = String.format("%02d:%02d", currentMinutes,currentSeconds);
             txtTimerDisplay.setText(timerString);
             showTimerControls();
+            startTimer(view);
         }
     }
 

@@ -77,7 +77,7 @@ public class MusicFragment extends Fragment {
         mainActivity = (MainActivity)getActivity();
         // Inflate the layout for this fragment
         final View musicView = inflater.inflate(R.layout.fragment_music, container, false);
-        TextView txtTrackName = (TextView)musicView.findViewById(R.id.txtTrackName);
+        txtTrackName = (TextView)musicView.findViewById(R.id.txtTrackName);
         musicIcon = (ImageView)musicView.findViewById(R.id.imgMusicIcon);
         musicIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +123,6 @@ public class MusicFragment extends Fragment {
                 forwardMusic(view);
             }
         });
-
 
         return musicView;
     }
